@@ -20,7 +20,9 @@ public class User {
 	private String name;
 	
 	private String email;
-
+	
+	private BigDecimal cash;
+	
 	// @OneToMany(mappedBy="user")
 	// @JoinColumn(name = "user_id")
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)
@@ -92,4 +94,13 @@ public class User {
         }
         return -1;// not there is list
     }
+
+	public BigDecimal getCash() {
+		return cash;
+	}
+
+	public void setCash(BigDecimal cash) {
+		this.cash = cash;
+	}
+
 }

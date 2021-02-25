@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version> 
+	<version>0.0.1-SNAPSHOT</version>
 	<name>demo</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -39,42 +39,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-<dependency>
-		<groupId>org.springframework.ldap</groupId>
-		<artifactId>spring-ldap-core</artifactId>
-</dependency>
-<dependency>
-		<groupId>com.unboundid</groupId>
-		<artifactId>unboundid-ldapsdk</artifactId>
-</dependency>
-<dependency>
-	<groupId>org.webjars</groupId>
-	<artifactId>jquery</artifactId>
-	<version>3.4.1</version>
-</dependency>
-<dependency>
-	<groupId>org.webjars</groupId>
-	<artifactId>bootstrap</artifactId>
-	<version>4.3.1</version>
-</dependency>
-<dependency>
-	<groupId>org.webjars</groupId>
-	<artifactId>webjars-locator-core</artifactId>
-</dependency>
-<dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-starter-oauth2-client</artifactId>
-</dependency> 
-<dependency>
-    <groupId>org.webjars</groupId>
-    <artifactId>js-cookie</artifactId>
-    <version>2.1.0</version>
-</dependency>
-		<dependency>
-			<groupId>pl.zankowski</groupId>
-			<artifactId>iextrading4j-all</artifactId>
-			<version>3.4.2</version>
 		</dependency>
 	</dependencies>
 

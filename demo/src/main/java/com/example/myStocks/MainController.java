@@ -3,6 +3,7 @@ package com.example.myStocks;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,33 +26,16 @@ public class MainController {
   @Autowired
   private OwnedStockRepository osRepository;
 
-  @GetMapping(path="/register")
-  public String registerForm(Model model) {
-	  model.addAttribute("register", new NewUser());
-	    return "register";
-  }
-/*
-  @PostMapping(path="/register")
-  public String registerSubmit(@ModelAttribute NewUser user, Model model) {
-    model.addAttribute("register", user);
-    // addNewUser(user.getName(), user.getEmail());
-    RegisterUser ru = new RegisterUser();
-    ru.buildDn(user);
-    String s = ru.findByName(user.getName()).get(0);
-    model.addAttribute("hell", s);
-    return "result";
-  }*/
-
   @PostMapping(path="/buyStock") // Map ONLY POST Requests
-  public @ResponseBody String buyStock (@RequestParam String name
+  public @ResponseBody String buyStock (@RequestParam String email
       , @RequestParam String ticker, @RequestParam BigDecimal price, @RequestParam int amount) {
     // @ResponseBody means the returned String is the response, not a view name
     // @RequestParam means it is a parameter from the GET or POST request
 	  
-     if (!userRepository.existsByName(name)) {
+     if (!userRepository.existsByEmail(email)) {
     	 return "User does not exist";
     } else { 
-    	User u = userRepository.findByName(name);
+    	User u = userRepository.findByEmail(email);
     	if (osRepository.existsByUser_idAndTicker(u.getId(), ticker)) {
     		OwnedStock os = osRepository.findByUser_idAndTicker(u.getId(), ticker);
     		os.setAvg_bprice(price, amount);
@@ -69,15 +53,15 @@ public class MainController {
   }
   
   @PostMapping(path="/sellStock") // Map ONLY POST Requests
-  public @ResponseBody String sellStock (@RequestParam String name
+  public @ResponseBody String sellStock (@RequestParam String email
       , @RequestParam String ticker, @RequestParam BigDecimal price, @RequestParam int amount) {
     // @ResponseBody means the returned String is the response, not a view name
     // @RequestParam means it is a parameter from the GET or POST request
 	  
-     if (!userRepository.existsByName(name)) {
+     if (!userRepository.existsByEmail(email)) {
     	 return "User does not exist";
     } else { 
-    	User u = userRepository.findByName(name);
+    	User u = userRepository.findByEmail(email);
     	if (osRepository.existsByUser_idAndTicker(u.getId(), ticker)) {
     		OwnedStock os = osRepository.findByUser_idAndTicker(u.getId(), ticker);
     		if (os.getStock_balance() < amount)
@@ -99,24 +83,6 @@ public class MainController {
     }
     return "Saved!";
   }
-  
-  @PostMapping(path="/add") // Map ONLY POST Requests
-  public @ResponseBody String addNewUser (@RequestParam String name
-	      , @RequestParam String email) {
-	    // @ResponseBody means the returned String is the response, not a view name
-	    // @RequestParam means it is a parameter from the GET or POST request
-	  if (!userRepository.existsByName(name)) {  
-		  return "Try something else! This username already exists!";
-	  }
-	  if (!userRepository.existsByName(email)) {  
-		  return "Email already exists";
-	  }
-	  User n = new User(); 
-	  n.setName(name); 
-	  n.setEmail(email);
-	  userRepository.save(n);  
-	  return "Saved!";
-	  }
 
   @GetMapping(path="/all")
   public @ResponseBody Iterable<User> getAllUsers() {
@@ -124,4 +90,3 @@ public class MainController {
     return userRepository.findAll();
   }
 }
-
