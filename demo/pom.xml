@@ -17,6 +17,28 @@
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
+	<dependency>
+  <groupId>org.apache.httpcomponents</groupId>
+  <artifactId>httpclient</artifactId>
+  <scope>test</scope>
+</dependency>
+	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+	<dependency>
+    <groupId>org.springframework.security.oauth</groupId>
+    <artifactId>spring-security-oauth2</artifactId>
+    <version>2.5.0.RELEASE</version>
+</dependency>
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-client</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -40,14 +62,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<dependency>
-		<groupId>org.springframework.ldap</groupId>
-		<artifactId>spring-ldap-core</artifactId>
-</dependency>
-<dependency>
-		<groupId>com.unboundid</groupId>
-		<artifactId>unboundid-ldapsdk</artifactId>
-</dependency>
 <dependency>
 	<groupId>org.webjars</groupId>
 	<artifactId>jquery</artifactId>
@@ -76,15 +90,34 @@
 			<artifactId>iextrading4j-all</artifactId>
 			<version>3.4.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
+		    <plugin>
+					<groupId>com.github.eirslett</groupId>
+					<artifactId>frontend-maven-plugin</artifactId>
+					<version>1.9.1</version>
+					<configuration>
+						<installDirectory>target</installDirectory>
+					</configuration>
+					<executions>
+						<execution>
+							<id>webpack build</id>
+							<goals>
+								<goal>webpack</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

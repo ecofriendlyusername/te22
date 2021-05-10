@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Entity(name = "User") // This tells Hibernate to make a table out of this class
 public class User {
 	@Id
@@ -23,8 +25,6 @@ public class User {
 	
 	private BigDecimal cash;
 	
-	// @OneToMany(mappedBy="user")
-	// @JoinColumn(name = "user_id")
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)
 	private List<OwnedStock> ostocks = new ArrayList<>();;
 	
@@ -48,23 +48,18 @@ public class User {
 		this.email = email;
 	}
 	
-	// public void setTickers(String ticker, BigDecimal price, int amount) {
 	public void addOwnedStock(String ticker, BigDecimal price, int amount) {
-		// this.tickers = tickers;
 		if (ostocks == null) {
 			ostocks = new ArrayList<OwnedStock>();
-			OwnedStock os = new OwnedStock();
-			os.addStock(price, amount);
-			os.setTicker(ticker); 
+			OwnedStock os = new OwnedStock(ticker, price, amount, this);
 			ostocks.add(os);
 		} else {
 			if (containsName(ostocks, ticker)) {
 				int indx = getIndexByProperty(this.ostocks, ticker);
 				ostocks.get(indx).addStock(price, amount);
 			} else {
-				OwnedStock os = new OwnedStock();
-				os.addStock(price, amount);
-				os.setTicker(ticker);
+				OwnedStock os = new OwnedStock(ticker, price, amount, this);
+				this.getOwnedStocks().add(os);
 				ostocks.add(os);
 			}
 		}

@@ -11,8 +11,10 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface OwnedStockRepository extends CrudRepository<OwnedStock, Integer> {
 	
-	OwnedStock findByUser_idAndTicker(Integer user_id, String ticker);
-	boolean existsByUser_idAndTicker(Integer user_id, String ticker);
+	OwnedStock findByUser_idAndTicker(int user_id, String ticker);
+
+	boolean existsByUser_idAndTicker(int user_id, String ticker);
+	
 	OwnedStock findByTicker(String ticker);
 	@Modifying
 	@Query("update OwnedStock o set o.avgbprice = ?1 where o.id = ?2")
