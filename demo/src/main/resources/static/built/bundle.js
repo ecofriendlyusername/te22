@@ -35785,8 +35785,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = (function (r
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -35816,12 +35814,24 @@ var client = __webpack_require__(/*! ./client */ "./src/main/js/client.js");
 var _require = __webpack_require__(/*! react */ "./node_modules/react/index.js"),
     useEffect = _require.useEffect;
 
-var _require2 = __webpack_require__(/*! node-iex-cloud */ "./node_modules/node-iex-cloud/lib/index.js"),
-    IEXCloudClient = _require2.IEXCloudClient; // import a promise base library
+var _require2 = __webpack_require__(/*! ./interested.jsx */ "./src/main/js/interested.jsx"),
+    Interested = _require2.Interested,
+    InterestedItems = _require2.InterestedItems;
+
+var _require3 = __webpack_require__(/*! ./order.jsx */ "./src/main/js/order.jsx"),
+    LimitOrder = _require3.LimitOrder,
+    MarketOrder = _require3.MarketOrder;
+
+var _require4 = __webpack_require__(/*! ./myaccount.jsx */ "./src/main/js/myaccount.jsx"),
+    UserRanking = _require4.UserRanking,
+    StockOwned = _require4.StockOwned;
+
+var _require5 = __webpack_require__(/*! node-iex-cloud */ "./node_modules/node-iex-cloud/lib/index.js"),
+    IEXCloudClient = _require5.IEXCloudClient; // import a promise base library
 
 
-var _require3 = __webpack_require__(/*! iexjs */ "./node_modules/iexjs/dist/esm/iexjs.js"),
-    Client = _require3.Client;
+var _require6 = __webpack_require__(/*! iexjs */ "./node_modules/iexjs/dist/esm/iexjs.js"),
+    Client = _require6.Client;
 
 var ct = new Client({
   api_token: "pk_21b4ffeccc6e3cnc1df07467a47231c6",
@@ -35829,6 +35839,621 @@ var ct = new Client({
 });
 
 var fetch = __webpack_require__(/*! node-fetch */ "./node_modules/node-fetch/browser.js");
+
+var BigBox = /*#__PURE__*/function (_React$Component) {
+  _inherits(BigBox, _React$Component);
+
+  var _super = _createSuper(BigBox);
+
+  function BigBox(props) {
+    var _this;
+
+    _classCallCheck(this, BigBox);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      current: 'order'
+    };
+    _this.myOrder = _this.myOrder.bind(_assertThisInitialized(_this));
+    _this.myAccount = _this.myAccount.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(BigBox, [{
+    key: "myAccount",
+    value: function myAccount(event) {
+      this.setState({
+        current: 'account'
+      });
+    } // 우선 이렇게..
+
+  }, {
+    key: "myOrder",
+    value: function myOrder(event) {
+      this.setState({
+        current: 'order'
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {}
+  }, {
+    key: "render",
+    value: function render() {
+      var styleBlue = {
+        backgroundColor: 'skyblue'
+      };
+      var curr = this.state.current;
+
+      var renderRightComponent = function renderRightComponent() {
+        if (curr == 'account') {
+          return /*#__PURE__*/React.createElement(StockOwned, null);
+        } else {
+          return /*#__PURE__*/React.createElement(InterestedItems, null);
+        }
+      };
+
+      var renderingRightComponent2 = function renderingRightComponent2() {
+        if (curr == 'account') {
+          return /*#__PURE__*/React.createElement(UserRanking, null);
+        }
+      };
+
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("nav", {
+        className: "navbar navbar-light",
+        style: styleBlue
+      }, /*#__PURE__*/React.createElement("button", {
+        className: "account",
+        type: "button",
+        onClick: this.myAccount,
+        name: "account"
+      }, /*#__PURE__*/React.createElement("h3", null, "My Account")), /*#__PURE__*/React.createElement("button", {
+        className: "order",
+        type: "button",
+        onClick: this.myOrder,
+        name: "order"
+      }, /*#__PURE__*/React.createElement("h3", null, "Order")), /*#__PURE__*/React.createElement("form", {
+        className: "form-inline my-2 my-lg-0"
+      }, /*#__PURE__*/React.createElement("input", {
+        className: "form-control mr-sm-2",
+        type: "search",
+        placeholder: "Search",
+        "aria-label": "Search"
+      }), /*#__PURE__*/React.createElement("button", {
+        className: "btn btn-outline-success my-2 my-sm-0",
+        type: "submit"
+      }, "Search"))), /*#__PURE__*/React.createElement("div", {
+        className: "container px-4 tanger"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "row justify-content-evenly"
+      }, renderRightComponent(), renderingRightComponent2()), /*#__PURE__*/React.createElement("div", {
+        className: "row justify-content-evenly"
+      })));
+    }
+  }]);
+
+  return BigBox;
+}(React.Component);
+
+ReactDOM.render( /*#__PURE__*/React.createElement(BigBox, null), document.getElementById('bigBox'));
+
+/***/ }),
+
+/***/ "./src/main/js/client.js":
+/*!*******************************!*\
+  !*** ./src/main/js/client.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var rest = __webpack_require__(/*! rest */ "./node_modules/rest/browser.js");
+
+var defaultRequest = __webpack_require__(/*! rest/interceptor/defaultRequest */ "./node_modules/rest/interceptor/defaultRequest.js");
+
+var mime = __webpack_require__(/*! rest/interceptor/mime */ "./node_modules/rest/interceptor/mime.js");
+
+var uriTemplateInterceptor = __webpack_require__(/*! ./api/uriTemplateInterceptor */ "./src/main/js/api/uriTemplateInterceptor.js");
+
+var errorCode = __webpack_require__(/*! rest/interceptor/errorCode */ "./node_modules/rest/interceptor/errorCode.js");
+
+var baseRegistry = __webpack_require__(/*! rest/mime/registry */ "./node_modules/rest/mime/registry.js");
+
+var registry = baseRegistry.child();
+registry.register('text/uri-list', __webpack_require__(/*! ./api/uriListConverter */ "./src/main/js/api/uriListConverter.js"));
+registry.register('application/hal+json', __webpack_require__(/*! rest/mime/type/application/hal */ "./node_modules/rest/mime/type/application/hal.js"));
+module.exports = rest.wrap(mime, {
+  registry: registry
+}).wrap(uriTemplateInterceptor).wrap(errorCode).wrap(defaultRequest, {
+  headers: {
+    'Accept': 'application/hal+json'
+  }
+});
+
+/***/ }),
+
+/***/ "./src/main/js/interested.jsx":
+/*!************************************!*\
+  !*** ./src/main/js/interested.jsx ***!
+  \************************************/
+/*! exports provided: Interested, InterestedItems */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Interested", function() { return Interested; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InterestedItems", function() { return InterestedItems; });
+
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var client = __webpack_require__(/*! ./client */ "./src/main/js/client.js");
+
+var Interested = /*#__PURE__*/function (_React$Component) {
+  _inherits(Interested, _React$Component);
+
+  var _super = _createSuper(Interested);
+
+  function Interested(props) {
+    var _this;
+
+    _classCallCheck(this, Interested);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      ticker: '',
+      action: ''
+    };
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
+    _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
+    _this.handleAction = _this.handleAction.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(Interested, [{
+    key: "handleChange",
+    value: function handleChange(event) {
+      var target = event.target;
+      this.setState(_defineProperty({}, target.name, target.value));
+    }
+  }, {
+    key: "handleAction",
+    value: function handleAction(event) {
+      var target = event.target;
+      this.setState(_defineProperty({}, target.name, target.value));
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(event) {
+      if (this.state.action === "Add") {
+        client({
+          method: 'POST',
+          path: '/home/addInterested',
+          params: {
+            'ticker': this.state.ticker
+          }
+        }).done(function (response) {
+          console.log(response);
+        });
+      }
+
+      if (this.state.action === "Delete") {
+        client({
+          method: 'POST',
+          path: '/home/deleteInterested',
+          params: {
+            'ticker': this.state.ticker
+          }
+        }).done(function (response) {
+          console.log(response);
+        });
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("div", {
+        className: "col"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "container owned"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "card stocklist"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "card-header"
+      }, "Interested"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
+        onSubmit: this.handleSubmit
+      }, /*#__PURE__*/React.createElement("label", null, "Add Interested Stock", /*#__PURE__*/React.createElement("input", {
+        type: "text",
+        name: "ticker",
+        onChange: this.handleChange,
+        value: this.state.ticker
+      })), /*#__PURE__*/React.createElement("input", {
+        type: "submit",
+        onClick: this.handleAction,
+        name: "action",
+        value: "Add"
+      }), /*#__PURE__*/React.createElement("input", {
+        type: "submit",
+        onClick: this.handleAction,
+        name: "action",
+        value: "Delete"
+      }))))));
+    }
+  }]);
+
+  return Interested;
+}(React.Component);
+var InterestedItems = /*#__PURE__*/function (_React$Component2) {
+  _inherits(InterestedItems, _React$Component2);
+
+  var _super2 = _createSuper(InterestedItems);
+
+  function InterestedItems(props) {
+    var _this2;
+
+    _classCallCheck(this, InterestedItems);
+
+    _this2 = _super2.call(this, props);
+    _this2.state = {
+      tickers: [],
+      items: '' // {} or ''?
+
+    };
+    return _this2;
+  }
+
+  _createClass(InterestedItems, [{
+    key: "tick",
+    value: function tick() {
+      var _this3 = this;
+
+      client({
+        method: 'GET',
+        path: 'https://sandbox.iexapis.com/v1/stock/market/batch',
+        params: {
+          'types': 'price',
+          'symbols': this.state.tickers,
+          'token': 'Tpk_18dfe6cebb4f41ffb219b9680f9acaf2'
+        }
+      }).then(function (res) {
+        _this3.setState(function (state) {
+          return {
+            items: res.entity
+          };
+        });
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this4 = this;
+
+      client({
+        method: 'GET',
+        path: '/home/getInterested'
+      }).then(function (res) {
+        res.entity.forEach(function (ob) {
+          return _this4.setState(function (prevState) {
+            return {
+              tickers: [].concat(_toConsumableArray(prevState.tickers), [ob])
+            };
+          });
+        });
+      });
+
+      if (this.state.tickers !== null) {
+        this.interval = setInterval(function () {
+          return _this4.tick();
+        }, 1000);
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      clearInterval(this.interval);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this5 = this;
+
+      return /*#__PURE__*/React.createElement("div", {
+        className: "col"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "container owned"
+      }, /*#__PURE__*/React.createElement("h4", null, "Favourites"), /*#__PURE__*/React.createElement("div", {
+        className: "card stocklist"
+      }, Object.keys(this.state.items).map(function (key) {
+        return /*#__PURE__*/React.createElement("div", {
+          className: "list-group-item"
+        }, /*#__PURE__*/React.createElement("h6", {
+          className: "tickers"
+        }, key), /*#__PURE__*/React.createElement("h5", {
+          className: "price"
+        }, _this5.state.items[key].price), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+          type: "button",
+          className: "btn btn-outline-primary"
+        }, "Buy")));
+      }))));
+    }
+  }]);
+
+  return InterestedItems;
+}(React.Component);
+
+/***/ }),
+
+/***/ "./src/main/js/myaccount.jsx":
+/*!***********************************!*\
+  !*** ./src/main/js/myaccount.jsx ***!
+  \***********************************/
+/*! exports provided: StockOwnedRealTime, UserRanking */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StockOwnedRealTime", function() { return StockOwnedRealTime; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserRanking", function() { return UserRanking; });
+
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var client = __webpack_require__(/*! ./client */ "./src/main/js/client.js");
+
+var _require = __webpack_require__(/*! react */ "./node_modules/react/index.js"),
+    useEffect = _require.useEffect; // import a promise base library
+
+
+var fetch = __webpack_require__(/*! node-fetch */ "./node_modules/node-fetch/browser.js");
+
+var StockOwnedRealTime = /*#__PURE__*/function (_React$Component) {
+  _inherits(StockOwnedRealTime, _React$Component);
+
+  var _super = _createSuper(StockOwnedRealTime);
+
+  function StockOwnedRealTime(props) {
+    var _this;
+
+    _classCallCheck(this, StockOwnedRealTime);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      items: '',
+      tickers: {}
+    };
+    return _this;
+  }
+
+  _createClass(StockOwnedRealTime, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      // 서버에서 api call
+      var temp = {};
+      client({
+        method: 'GET',
+        path: '/home/getUserStocks'
+      }).then(function (res) {
+        res.entity.forEach(function (ob) {
+          return temp[ob.ticker] = ob;
+        }); // array to object
+
+        _this2.setState(function (state) {
+          return {
+            tickers: temp
+          };
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this3 = this;
+
+      return /*#__PURE__*/React.createElement("div", {
+        className: "col"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "container owned"
+      }, /*#__PURE__*/React.createElement("h4", null, "My Account"), /*#__PURE__*/React.createElement("div", {
+        className: "card stocklist"
+      }, Object.keys(this.state.items).map(function (key) {
+        return /*#__PURE__*/React.createElement("div", {
+          className: "list-group-item"
+        }, /*#__PURE__*/React.createElement("div", {
+          className: "stockinfo"
+        }, /*#__PURE__*/React.createElement("h6", {
+          className: "tickers"
+        }, key), /*#__PURE__*/React.createElement("h5", {
+          className: "price"
+        }, _this3.state.items[key].price), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
+          className: "stockbalance"
+        }, _this3.state.tickers[key].stockbalance, " @ "), /*#__PURE__*/React.createElement("h6", {
+          className: "avgbprice"
+        }, _this3.state.tickers[key].avgbprice))), /*#__PURE__*/React.createElement("div", {
+          className: "transactionbuttons"
+        }, /*#__PURE__*/React.createElement("button", {
+          type: "button",
+          className: "btn btn-outline-primary"
+        }, "Buy"), /*#__PURE__*/React.createElement("button", {
+          type: "button",
+          className: "btn btn-outline-danger"
+        }, "Sell")));
+      }))));
+    }
+  }]);
+
+  return StockOwnedRealTime;
+}(React.Component);
+var UserRanking = /*#__PURE__*/function (_React$Component2) {
+  _inherits(UserRanking, _React$Component2);
+
+  var _super2 = _createSuper(UserRanking);
+
+  function UserRanking(props) {
+    var _this4;
+
+    _classCallCheck(this, UserRanking);
+
+    _this4 = _super2.call(this, props);
+    _this4.state = {
+      items: '',
+      users: {}
+    };
+    return _this4;
+  }
+
+  _createClass(UserRanking, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this5 = this;
+
+      var temp = {};
+      client({
+        method: 'GET',
+        path: '/home/getUserRanking'
+      }).then(function (res) {
+        res.entity.forEach(function (ob) {
+          return temp[ob.username] = ob.rturn;
+        }); // array to object
+
+        _this5.setState(function (state) {
+          return {
+            users: temp
+          };
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this6 = this;
+
+      return /*#__PURE__*/React.createElement("div", {
+        className: "col"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "container owned"
+      }, /*#__PURE__*/React.createElement("h4", null, "User Ranking"), /*#__PURE__*/React.createElement("div", {
+        className: "card stocklist"
+      }, Object.keys(this.state.users).map(function (key) {
+        return /*#__PURE__*/React.createElement("div", {
+          className: "list-group-item"
+        }, /*#__PURE__*/React.createElement("div", {
+          className: "stockinfo"
+        }, /*#__PURE__*/React.createElement("h6", {
+          className: "tickers"
+        }, key), /*#__PURE__*/React.createElement("h5", {
+          className: "price"
+        }, _this6.state.users[key])));
+      }))));
+    }
+  }]);
+
+  return UserRanking;
+}(React.Component);
+
+/***/ }),
+
+/***/ "./src/main/js/order.jsx":
+/*!*******************************!*\
+  !*** ./src/main/js/order.jsx ***!
+  \*******************************/
+/*! exports provided: MarketOrder, LimitOrder */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MarketOrder", function() { return MarketOrder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LimitOrder", function() { return LimitOrder; });
+
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var client = __webpack_require__(/*! ./client */ "./src/main/js/client.js");
 
 var MarketOrder = /*#__PURE__*/function (_React$Component) {
   _inherits(MarketOrder, _React$Component);
@@ -35924,7 +36549,6 @@ var MarketOrder = /*#__PURE__*/function (_React$Component) {
 
   return MarketOrder;
 }(React.Component);
-
 var LimitOrder = /*#__PURE__*/function (_React$Component2) {
   _inherits(LimitOrder, _React$Component2);
 
@@ -36027,152 +36651,6 @@ var LimitOrder = /*#__PURE__*/function (_React$Component2) {
 
   return LimitOrder;
 }(React.Component);
-
-var TestingClass = /*#__PURE__*/function (_React$Component3) {
-  _inherits(TestingClass, _React$Component3);
-
-  var _super3 = _createSuper(TestingClass);
-
-  function TestingClass(props) {
-    var _this3;
-
-    _classCallCheck(this, TestingClass);
-
-    _this3 = _super3.call(this, props);
-    _this3.state = {
-      items: '',
-      tickers: {}
-    };
-    return _this3;
-  }
-
-  _createClass(TestingClass, [{
-    key: "tick",
-    value: function tick() {
-      var _this4 = this;
-
-      client({
-        method: 'GET',
-        path: 'https://sandbox.iexapis.com/v1/stock/market/batch',
-        params: {
-          'types': 'price',
-          'symbols': Object.keys(this.state.tickers),
-          'token': 'Tpk_18dfe6cebb4f41ffb219b9680f9acaf2'
-        }
-      }).then(function (res) {
-        _this4.setState(function (state) {
-          return {
-            items: res.entity
-          };
-        });
-      });
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this5 = this;
-
-      var temp = {};
-      client({
-        method: 'GET',
-        path: '/home/getUserStocks'
-      }).then(function (res) {
-        res.entity.forEach(function (ob) {
-          return temp[ob.ticker] = ob;
-        }); // array to object
-
-        _this5.setState(function (state) {
-          return {
-            tickers: temp
-          };
-        });
-
-        console.log(temp);
-      });
-      this.interval = setInterval(function () {
-        return _this5.tick();
-      }, 1000);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      clearInterval(this.interval);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this6 = this;
-
-      return Object.keys(this.state.items).map(function (key) {
-        return /*#__PURE__*/React.createElement("div", {
-          className: "list-group-item"
-        }, /*#__PURE__*/React.createElement("div", {
-          className: "stockinfo"
-        }, /*#__PURE__*/React.createElement("h6", {
-          className: "tickers"
-        }, key), /*#__PURE__*/React.createElement("h5", {
-          className: "price"
-        }, _this6.state.items[key].price), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
-          className: "stockbalance"
-        }, _this6.state.tickers[key].stockbalance, " @ "), /*#__PURE__*/React.createElement("h6", {
-          className: "avgbprice"
-        }, _this6.state.tickers[key].avgbprice))), /*#__PURE__*/React.createElement("div", {
-          className: "transactionbuttons"
-        }, /*#__PURE__*/React.createElement("button", {
-          type: "button",
-          className: "btn btn-outline-primary"
-        }, "Buy"), /*#__PURE__*/React.createElement("button", {
-          type: "button",
-          className: "btn btn-outline-danger"
-        }, "Sell")));
-      });
-    }
-  }]);
-
-  return TestingClass;
-}(React.Component);
-
-ReactDOM.render( /*#__PURE__*/React.createElement(MarketOrder, null), document.getElementById('react'));
-ReactDOM.render( /*#__PURE__*/React.createElement(LimitOrder, null), document.getElementById('react-2'));
-ReactDOM.render(
-/*#__PURE__*/
-// <StockRealTime />,
-React.createElement(TestingClass, null), document.getElementById('realTime'));
-
-/***/ }),
-
-/***/ "./src/main/js/client.js":
-/*!*******************************!*\
-  !*** ./src/main/js/client.js ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var rest = __webpack_require__(/*! rest */ "./node_modules/rest/browser.js");
-
-var defaultRequest = __webpack_require__(/*! rest/interceptor/defaultRequest */ "./node_modules/rest/interceptor/defaultRequest.js");
-
-var mime = __webpack_require__(/*! rest/interceptor/mime */ "./node_modules/rest/interceptor/mime.js");
-
-var uriTemplateInterceptor = __webpack_require__(/*! ./api/uriTemplateInterceptor */ "./src/main/js/api/uriTemplateInterceptor.js");
-
-var errorCode = __webpack_require__(/*! rest/interceptor/errorCode */ "./node_modules/rest/interceptor/errorCode.js");
-
-var baseRegistry = __webpack_require__(/*! rest/mime/registry */ "./node_modules/rest/mime/registry.js");
-
-var registry = baseRegistry.child();
-registry.register('text/uri-list', __webpack_require__(/*! ./api/uriListConverter */ "./src/main/js/api/uriListConverter.js"));
-registry.register('application/hal+json', __webpack_require__(/*! rest/mime/type/application/hal */ "./node_modules/rest/mime/type/application/hal.js"));
-module.exports = rest.wrap(mime, {
-  registry: registry
-}).wrap(uriTemplateInterceptor).wrap(errorCode).wrap(defaultRequest, {
-  headers: {
-    'Accept': 'application/hal+json'
-  }
-});
 
 /***/ }),
 

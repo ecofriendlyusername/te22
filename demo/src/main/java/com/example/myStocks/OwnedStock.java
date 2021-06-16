@@ -14,9 +14,6 @@ import javax.persistence.ManyToOne;
 
 @Entity(name = "OwnedStock")
 public class OwnedStock implements Serializable {
-	/**
-	 * 
-	 */
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
@@ -24,6 +21,7 @@ public class OwnedStock implements Serializable {
 	private String ticker;
 	private BigDecimal avgbprice;
 	private int stockbalance;
+	private boolean isMargin = false;
 	@ManyToOne(optional = false, cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	private User user;
 	
@@ -91,5 +89,13 @@ public class OwnedStock implements Serializable {
 	
 	public void sellStock(int amount) {
 		stockbalance -= amount;
+	}
+
+	public boolean isMargin() {
+		return isMargin;
+	}
+
+	public void setMargin(boolean isMargin) {
+		this.isMargin = isMargin;
 	}
 }

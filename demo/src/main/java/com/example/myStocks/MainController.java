@@ -1,6 +1,7 @@
 package com.example.myStocks;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,6 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 public class MainController {
   @Autowired
   private UserRepository userRepository;
-  @Autowired
-  private OwnedStockRepository osRepository;
   
   @Autowired
   private StockService stockService;
@@ -137,10 +136,51 @@ public class MainController {
 				 return ResponseEntity.ok("Not Enough Shares!");
 		 }
   }
+  
+  @PostMapping(path="/addInterested")
+  public ResponseEntity<?> addInterested(@RequestParam String ticker) {
+	  OidcUser oidcUser = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	  String email = oidcUser.getEmail();
+	  if (!userRepository.existsByEmail(email)) {
+		  return ResponseEntity.ok("User does not exist");
+		  } else { 
+			 if (stockService.addInterestedService(email, ticker))
+				 return ResponseEntity.ok("stock added");
+			 else
+				 return ResponseEntity.ok("!");
+		 }
+  }
+  
+  @GetMapping(path="/getInterested")
+  public ResponseEntity<?> getInterested() {
+	  OidcUser oidcUser = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	  String email = oidcUser.getEmail();
+	  System.out.println("I was called");
+	  if (!userRepository.existsByEmail(email)) {
+		  return ResponseEntity.ok("User does not exist");
+		  } else { 
+			 return ResponseEntity.ok(stockService.getInterestedService(email));
+		 }
+  }
+  
+  @PostMapping(path="/deleteInterested")
+  public ResponseEntity<?> deleteInterested(@RequestParam String ticker) {
+	  OidcUser oidcUser = (OidcUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	  String email = oidcUser.getEmail();
+	return ResponseEntity.ok(stockService.deleteInterestedService(email, ticker));
+  }
+  
+  @GetMapping(path="/getUserRanking")
+  public ResponseEntity<?> getUserRanking() {
+	  List<UserPortfolio> portfolios = stockService.getUserRankingService();
+	  Collections.sort(portfolios, new SortbyReturn());
+	  return ResponseEntity.ok(portfolios);
+  }
 
   @GetMapping(path="/all")
   public @ResponseBody Iterable<User> getAllUsers() {
     // This returns a JSON or XML with the users
     return userRepository.findAll();
   }
+  
 }

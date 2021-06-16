@@ -25,8 +25,10 @@ public class User {
 	
 	private BigDecimal cash;
 	
+	private String interested = "";
+	
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)
-	private List<OwnedStock> ostocks = new ArrayList<>();;
+	private List<OwnedStock> ostocks = new ArrayList<>();
 	
 	public Integer getId() {
 		return id;
@@ -98,4 +100,11 @@ public class User {
 		this.cash = cash;
 	}
 
+	public String getInterested() {
+		return this.interested;
+	}
+
+	public void setInterested(String interested) {
+		this.interested = interested;
+	}
 }

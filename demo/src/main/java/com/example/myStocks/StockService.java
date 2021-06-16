@@ -1,11 +1,17 @@
 package com.example.myStocks;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -63,7 +69,8 @@ public class StockService {
 			    .atZone(ZoneId.of("America/New_York"))
 			    .toInstant().toEpochMilli();
 			BigDecimal pricenow;
-			while(System.currentTimeMillis() < end) {
+			
+			while (System.currentTimeMillis() < end) {
 				pricenow = quote.getIexRealtimePrice();
 				System.out.println("pricenow: " + pricenow);
 				if (pricenow.compareTo(price) <= 0) {
@@ -103,6 +110,56 @@ public class StockService {
 		}
 		userRepository.save(u);
 		return true;
+	}
+	
+	public boolean marketOrderBuyServiceReservedTest(String email, String ticker, int amount) {
+		// TEST 나중에 String return 함수로 바꾸기
+		Timer timer = new Timer();
+        Calendar testdate = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
+        System.out.println();
+        if (testdate.get(Calendar.DAY_OF_WEEK) == 7 || testdate.get(Calendar.DAY_OF_WEEK) == 1) {
+            System.out.println("주말에는 예약주문을 받지 않습니다");
+            return false;
+        }
+        if (testdate.get(Calendar.HOUR_OF_DAY) < 8) {
+            // 아침에 주문
+            System.out.println("Market Order reserved for 9:30AM today");
+            testdate.set(Calendar.HOUR_OF_DAY, 9);
+            testdate.set(Calendar.MINUTE, 30);
+            testdate.set(Calendar.SECOND, 0);
+            timer.schedule(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            System.out.println("여기서 시장가주문 함수 Call");
+                            marketOrderBuyService(email, ticker, amount);
+                        }
+                    }, testdate.getTime()
+            );
+        } else if (testdate.get(Calendar.HOUR_OF_DAY) >= 18) {
+            if (testdate.get(Calendar.DAY_OF_WEEK) == 6) {
+                System.out.println("Market Order reserved for 9:30AM next week Monday");
+                testdate.set(Calendar.DAY_OF_MONTH, Calendar.DAY_OF_MONTH + 3);
+            } else {
+                System.out.println("Market Order reserved for 9:30AM tomorrow");
+                testdate.set(Calendar.DAY_OF_MONTH, Calendar.DAY_OF_MONTH + 1);
+            }
+            testdate.set(Calendar.HOUR_OF_DAY, 9);
+            testdate.set(Calendar.MINUTE, 30);
+            testdate.set(Calendar.SECOND, 0);
+            timer.schedule(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            System.out.println("여기서 시장가주문 함수 Call");
+                            marketOrderBuyService(email, ticker, amount);
+                        }
+                    }, testdate.getTime()
+            );
+        } else {
+            System.out.println("예약 주문 가능 시간이 아닙니다");
+        }
+        return false;
 	}
 	
     public boolean limitOrderSellService(String email, String ticker, BigDecimal price, int amount) {
@@ -167,4 +224,120 @@ public class StockService {
 		userRepository.save(u);
 		return true;
     }
+
+    public boolean marketOrderSellServiceReservedTest(String email, String ticker, int amount) {
+		// TEST 나중에 String return 함수로 바꾸기
+    	Timer timer = new Timer();
+        Calendar testdate = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
+        System.out.println();
+        if (testdate.get(Calendar.DAY_OF_WEEK) == 7 || testdate.get(Calendar.DAY_OF_WEEK) == 1) {
+            System.out.println("주말에는 예약주문을 받지 않습니다");
+            return false;
+        }
+        if (testdate.get(Calendar.HOUR_OF_DAY) < 8) {
+            // 아침에 주문
+            System.out.println("Market Order reserved for 9:30AM today");
+            testdate.set(Calendar.HOUR_OF_DAY, 9);
+            testdate.set(Calendar.MINUTE, 30);
+            testdate.set(Calendar.SECOND, 0);
+            timer.schedule(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            System.out.println("여기서 시장가주문 함수 Call");
+                            marketOrderSellService(email, ticker, amount);
+                        }
+                    }, testdate.getTime()
+            );
+        } else if (testdate.get(Calendar.HOUR_OF_DAY) >= 18) {
+            if (testdate.get(Calendar.DAY_OF_WEEK) == 6) {
+                System.out.println("Market Order reserved for 9:30AM next week Monday");
+                testdate.set(Calendar.DAY_OF_MONTH, Calendar.DAY_OF_MONTH + 3);
+            } else {
+                System.out.println("Market Order reserved for 9:30AM tomorrow");
+                testdate.set(Calendar.DAY_OF_MONTH, Calendar.DAY_OF_MONTH + 1);
+            }
+            testdate.set(Calendar.HOUR_OF_DAY, 9);
+            testdate.set(Calendar.MINUTE, 30);
+            testdate.set(Calendar.SECOND, 0);
+            timer.schedule(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            System.out.println("여기서 시장가주문 함수 Call");
+                            marketOrderSellService(email, ticker, amount);
+                        }
+                    }, testdate.getTime()
+            );
+        } else {
+            System.out.println("예약 주문 가능 시간이 아닙니다");
+        }
+        return false;
+	}
+	
+	public boolean addInterestedService(String email, String ticker) {
+		// TODO Auto-generated method stub
+		User u = userRepository.findByEmail(email);
+		String[] tickers = u.getInterested().split(" ");
+		boolean exists = false;
+		for (int i = 0; i < tickers.length; i++) {
+			if (tickers[i] == ticker) {
+				exists = true;
+				break;
+			}
+			
+		}
+		if (!exists) u.setInterested(u.getInterested() + ticker + " ");
+		userRepository.save(u);
+		return true;
+	}
+	
+	//public List<TickerOnly> getInterestedService(String email) {
+	public String[] getInterestedService(String email) {
+		User u = userRepository.findByEmail(email);
+		String tickers = u.getInterested();
+		String[] s = tickers.split(" ");
+		return s;
+	}
+
+	public Object deleteInterestedService(String email, String ticker) {
+		// TODO Auto-generated method stub
+		User u = userRepository.findByEmail(email);
+		String[] tickers = u.getInterested().split(" ");
+		boolean exists = false;
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < tickers.length; i++) {
+			if (tickers[i].equals(ticker)) {
+				continue;
+			}
+			s.append(tickers[i]);
+			s.append(" ");
+		}
+		u.setInterested(s.toString());
+		userRepository.save(u);
+		return null;
+	}
+
+	// 시간차가 크게 중요하지 않으므로 우선 이렇게 
+	// After hours?
+	public List<UserPortfolio> getUserRankingService() {
+		// TODO Auto-generated method stub
+		List<UserPortfolio> portfolios = new ArrayList<UserPortfolio>();
+		for (User u : userRepository.findAll()) {
+			UserPortfolio up = new UserPortfolio(u.getName());
+			BigDecimal profitSum = new BigDecimal(0);
+			BigDecimal myMoney = new BigDecimal(0);
+			for (OwnedStock o : userRepository.findByEmail(u.getEmail()).getOwnedStocks()) {
+				final Quote quote = cloudClient.executeRequest(new QuoteRequestBuilder()
+			  	        .withSymbol(o.getTicker())
+			  	        .build());
+				BigDecimal profit = quote.getLatestPrice().subtract(o.getAvg_bprice());
+				profitSum = profit.multiply(new BigDecimal(o.getStock_balance()));
+				myMoney = o.getAvg_bprice().multiply(new BigDecimal(o.getStock_balance()));
+			}
+			up.setRturn(profitSum.divide(myMoney, 2, RoundingMode.HALF_UP).multiply(new BigDecimal(100)));
+			portfolios.add(up);
+		}
+		return portfolios;
+	}
 }
