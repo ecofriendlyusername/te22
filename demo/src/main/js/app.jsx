@@ -8,7 +8,7 @@ const { LimitOrder, MarketOrder } = require('./order.jsx')
 const { UserRanking, StockOwned } = require('./myaccount.jsx')
 const { IEXCloudClient } = require("node-iex-cloud");
 // import a promise base library
-const {Client} = require("iexjs");
+const { Client } = require("iexjs");
 const ct = new Client({api_token: "pk_21b4ffeccc6e3cnc1df07467a47231c6", version: "sandbox"});
 const fetch = require("node-fetch");
 
@@ -20,6 +20,7 @@ class BigBox extends React.Component {
 		};
 		this.myOrder = this.myOrder.bind(this);
 		this.myAccount = this.myAccount.bind(this);
+		this.myScheduleOrder = this.myScheduleOrder.bind(this);
 	}
 	
 	myAccount(event) {
@@ -34,6 +35,12 @@ class BigBox extends React.Component {
        });
     }
 
+    myScheduleOrder(event) {
+      this.setState({
+	      current : 'schedule'
+       });
+    }
+
     componentDidMount() {
 	
 	}
@@ -45,16 +52,13 @@ class BigBox extends React.Component {
 		const renderRightComponent = () => {
 			if (curr == 'account') {
 				return <StockOwned />;
-			} else {
+			} else if (curr == 'order'){
 				return <InterestedItems />;
-			}
+			} else {
+				return <LimitOrder />;
+	     	}
 		}
-		const renderingRightComponent2 = () => {
-			if (curr == 'account') {
-				return <UserRanking />;
-			} 
-		}
-			return (
+		return (
 			  <div>
 	               <nav className="navbar navbar-light" style={styleBlue}>
                        <button className="account" type="button" onClick={this.myAccount} name="account">
@@ -62,6 +66,9 @@ class BigBox extends React.Component {
                       </button>
                       <button className="order" type="button" onClick={this.myOrder} name="order">
                          <h3>Order</h3>
+                      </button>
+                      <button className="schedule" type="button" onClick={this.myScheduleOrder} name="schedule">
+                         <h3>Schedule an Order</h3>
                       </button>
                        <form className="form-inline my-2 my-lg-0">
                           <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"></input>
@@ -71,7 +78,6 @@ class BigBox extends React.Component {
 				   <div className="container px-4 tanger">
                       <div className="row justify-content-evenly">
                          {renderRightComponent()}
-                         {renderingRightComponent2()}
                       </div>
                       <div className="row justify-content-evenly">
                       </div>

@@ -54,39 +54,50 @@ public class StockService {
 	
 	public boolean limitOrderBuyService(String email, String ticker, BigDecimal price, int amount) {
 		//Thread? ScheduledTask????
+		class LimitOrder {
+            Timer timer = new Timer();
+            TimerTask exitApp = new TimerTask() {
+                @Override
+                public void run() {
+                    System.exit(0);
+                }
+            };
+
+            public LimitOrder(Quote quote, User u, BigDecimal cashdraw) {
+                Calendar testdate = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
+                testdate.set(Calendar.HOUR_OF_DAY, 18);
+                testdate.set(Calendar.MINUTE, 0);
+                testdate.set(Calendar.SECOND, 0);
+                timer.schedule(exitApp, testdate.getTime());
+                class priceCheck extends TimerTask {
+                    public void run() {
+                    	BigDecimal pricenow = quote.getIexRealtimePrice();
+        				if (pricenow.compareTo(price) <= 0) {
+        					u.setCash(u.getCash().subtract(cashdraw));
+        					if (osRepository.existsByUser_idAndTicker(u.getId(), ticker)) {
+        						OwnedStock os = osRepository.findByUser_idAndTicker(u.getId(), ticker);
+        						os.addStock(pricenow, amount);
+        					} else {
+        						u.addOwnedStock(ticker, pricenow, amount);
+        					}
+        					userRepository.save(u);
+        				}
+        			
+                    }
+                }
+                Timer timer2 = new Timer();
+                timer2.schedule(new priceCheck(), 0, 500);
+            }
+        }
 		User u = userRepository.findByEmail(email);
 		BigDecimal cashdraw = price.multiply(new BigDecimal(amount));
-		if (cashdraw.compareTo(u.getCash()) == 1)
-			return false;
+		if (cashdraw.compareTo(u.getCash()) == 1) { return false; }
 		else {
 			final Quote quote = cloudClient.executeRequest(new QuoteRequestBuilder()
 		  	        .withSymbol(ticker)
 		  	        .build());
-			String myDate = LocalDate.now(ZoneId.of("America/New_York")) + " 18:00:00";
-			LocalDateTime localDateTime = LocalDateTime.parse(myDate,
-			    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") );
-			long end = localDateTime
-			    .atZone(ZoneId.of("America/New_York"))
-			    .toInstant().toEpochMilli();
-			BigDecimal pricenow;
-			
-			while (System.currentTimeMillis() < end) {
-				pricenow = quote.getIexRealtimePrice();
-				System.out.println("pricenow: " + pricenow);
-				if (pricenow.compareTo(price) <= 0) {
-					System.out.println("price: " + price + ", pricenow: " + pricenow);
-					u.setCash(u.getCash().subtract(cashdraw));
-					if (osRepository.existsByUser_idAndTicker(u.getId(), ticker)) {
-						OwnedStock os = osRepository.findByUser_idAndTicker(u.getId(), ticker);
-						os.addStock(pricenow, amount);
-					} else {
-						u.addOwnedStock(ticker, pricenow, amount);
-					}
-					userRepository.save(u);
-					return true; // ???
-				}
-			}
-			return false;
+			new LimitOrder(quote, u, cashdraw);
+			return true;
 		}
     } 
 	
@@ -163,38 +174,51 @@ public class StockService {
 	}
 	
     public boolean limitOrderSellService(String email, String ticker, BigDecimal price, int amount) {
+    	class LimitOrder {
+            Timer timer = new Timer();
+            TimerTask exitApp = new TimerTask() {
+                @Override
+                public void run() {
+                    System.exit(0);
+                }
+            };
+
+            public LimitOrder(User u, Quote quote, OwnedStock os) {
+                Calendar testdate = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
+                testdate.set(Calendar.HOUR_OF_DAY, 18);
+                testdate.set(Calendar.MINUTE, 0);
+                testdate.set(Calendar.SECOND, 0);
+                timer.schedule(exitApp, testdate.getTime());
+                class priceCheck extends TimerTask {
+                    public void run() {
+                    	BigDecimal pricenow = quote.getIexRealtimePrice();
+						if (pricenow.compareTo(price) >= 1) {
+							if (os.getStock_balance() == amount) {
+								u.getOwnedStocks().remove(os);
+								osRepository.delete(os);
+							} else {
+								os.sellStock(amount);
+							}
+							userRepository.save(u);
+						}
+                    }
+                }
+                Timer timer2 = new Timer();
+                timer2.schedule(new priceCheck(), 0, 500);
+            }
+        }
     	User u = userRepository.findByEmail(email);
-		if (osRepository.existsByUser_idAndTicker(u.getId(), ticker))
+    	if (osRepository.existsByUser_idAndTicker(u.getId(), ticker))
 			return false;
 		else {
 			OwnedStock os = osRepository.findByUser_idAndTicker(u.getId(), ticker);
-					if (os.getStock_balance() < amount) 
-						return false;
-					else {
-						final Quote quote = cloudClient.executeRequest(new QuoteRequestBuilder()
-					  	        .withSymbol(ticker)
-					  	        .build());
-						String myDate = LocalDate.now(ZoneId.of("EDT")) + " 18:00:00";
-						LocalDateTime localDateTime = LocalDateTime.parse(myDate,
-						    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") );
-						long end = localDateTime
-						    .atZone(ZoneId.of("EDT"))
-						    .toInstant().toEpochMilli();
-						BigDecimal pricenow;
-						while(System.currentTimeMillis() < end) {
-							pricenow = quote.getIexRealtimePrice();
-							if (pricenow.compareTo(price) >= 1) {
-								if (os.getStock_balance() == amount) {
-									u.getOwnedStocks().remove(os);
-									osRepository.delete(os);
-								} else {
-									os.sellStock(amount);
-								}
-								userRepository.save(u);
-								return true;
-							}
-						}
-						return false;
+			if (os.getStock_balance() < amount) { return false; } 
+			else {
+				final Quote quote = cloudClient.executeRequest(new QuoteRequestBuilder()
+			  	        .withSymbol(ticker)
+			  	        .build());
+				new LimitOrder(u, quote, os);
+				return true;
 			}
 		}
     }

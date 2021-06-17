@@ -35856,6 +35856,7 @@ var BigBox = /*#__PURE__*/function (_React$Component) {
     };
     _this.myOrder = _this.myOrder.bind(_assertThisInitialized(_this));
     _this.myAccount = _this.myAccount.bind(_assertThisInitialized(_this));
+    _this.myScheduleOrder = _this.myScheduleOrder.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -35875,6 +35876,13 @@ var BigBox = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
+    key: "myScheduleOrder",
+    value: function myScheduleOrder(event) {
+      this.setState({
+        current: 'schedule'
+      });
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {}
   }, {
@@ -35888,14 +35896,10 @@ var BigBox = /*#__PURE__*/function (_React$Component) {
       var renderRightComponent = function renderRightComponent() {
         if (curr == 'account') {
           return /*#__PURE__*/React.createElement(StockOwned, null);
-        } else {
+        } else if (curr == 'order') {
           return /*#__PURE__*/React.createElement(InterestedItems, null);
-        }
-      };
-
-      var renderingRightComponent2 = function renderingRightComponent2() {
-        if (curr == 'account') {
-          return /*#__PURE__*/React.createElement(UserRanking, null);
+        } else {
+          return /*#__PURE__*/React.createElement(LimitOrder, null);
         }
       };
 
@@ -35912,7 +35916,12 @@ var BigBox = /*#__PURE__*/function (_React$Component) {
         type: "button",
         onClick: this.myOrder,
         name: "order"
-      }, /*#__PURE__*/React.createElement("h3", null, "Order")), /*#__PURE__*/React.createElement("form", {
+      }, /*#__PURE__*/React.createElement("h3", null, "Order")), /*#__PURE__*/React.createElement("button", {
+        className: "schedule",
+        type: "button",
+        onClick: this.myScheduleOrder,
+        name: "schedule"
+      }, /*#__PURE__*/React.createElement("h3", null, "Schedule an Order")), /*#__PURE__*/React.createElement("form", {
         className: "form-inline my-2 my-lg-0"
       }, /*#__PURE__*/React.createElement("input", {
         className: "form-control mr-sm-2",
@@ -35926,7 +35935,7 @@ var BigBox = /*#__PURE__*/function (_React$Component) {
         className: "container px-4 tanger"
       }, /*#__PURE__*/React.createElement("div", {
         className: "row justify-content-evenly"
-      }, renderRightComponent(), renderingRightComponent2()), /*#__PURE__*/React.createElement("div", {
+      }, renderRightComponent()), /*#__PURE__*/React.createElement("div", {
         className: "row justify-content-evenly"
       })));
     }
